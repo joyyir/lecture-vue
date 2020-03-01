@@ -1,19 +1,33 @@
+import SearchModel from './models/SearchModel.js'
+
 new Vue({
     el: '#app',
     data: {
-        query: ''
+        query: '',
+        submitted: false,
+        searchResult: [],
     },
     methods: {
         onSubmit(e) {
-            debugger
+            this.search()
         },
         onReset() {
-            this.query = ''
-            // TODO : 검색 결과를 숨겨야함
-            debugger
+            this.resetForm();
         },
         onKeyup(e) {
-            if (!this.query.length) this.onReset()
+            if (!this.query.length) this.resetForm()
+        },
+        search() {
+            SearchModel.list().then(data => {
+                this.submitted = true
+                this.searchResult = data
+            })
+        },
+        resetForm() {
+            this.query = ''
+            this.submitted = false
+            this.searchResult = []
+            this.$refs.form.focus()
         }
     }
 })
